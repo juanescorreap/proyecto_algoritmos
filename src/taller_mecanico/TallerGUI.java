@@ -28,11 +28,24 @@ public class TallerGUI extends JFrame {
         JButton btnAgregarEmpleado = new JButton("Agregar Empleado");
         JButton btnMostrarVehiculos = new JButton("Mostrar Vehiculos");
         JButton btnMostrarEmpleados = new JButton("Mostrar Empleados");
+        JButton btnGuardarVehiculos = new JButton("Guardar Vehículos");
+        JButton btnCargarVehiculos = new JButton("Cargar Vehículos");
+        JButton btnGuardarEmpleados = new JButton("Guardar Empleados");
+        JButton btnCargarEmpleados = new JButton("Cargar Empleados");
+        JButton btnGuardarServicios = new JButton("Guardar Servicios");
+        JButton btnCargarServicios = new JButton("Cargar Servicios");
+
 
         panel.add(btnAgregarVehiculo);
         panel.add(btnAgregarEmpleado);
         panel.add(btnMostrarVehiculos);
         panel.add(btnMostrarEmpleados);
+        panel.add(btnGuardarVehiculos);
+        panel.add(btnCargarVehiculos);
+        panel.add(btnGuardarEmpleados);
+        panel.add(btnCargarEmpleados);
+        panel.add(btnGuardarServicios);
+        panel.add(btnCargarServicios);
 
         btnAgregarVehiculo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -57,6 +70,13 @@ public class TallerGUI extends JFrame {
                 mostrarEmpleados();
             }
         });
+        btnGuardarVehiculos.addActionListener(e -> taller.guardarVehiculosEnArchivo("vehiculos.txt"));
+        btnCargarVehiculos.addActionListener(e -> taller.cargarVehiculosDesdeArchivo("vehiculos.txt"));
+        btnGuardarEmpleados.addActionListener(e -> taller.guardarEmpleadosEnArchivo("empleados.txt"));
+        btnCargarEmpleados.addActionListener(e -> taller.cargarEmpleadosDesdeArchivo("empleados.txt"));
+        btnGuardarServicios.addActionListener(e -> taller.guardarServiciosEnArchivo("servicios.txt"));
+        btnCargarServicios.addActionListener(e -> taller.cargarServiciosDesdeArchivo("servicios.txt"));
+
         this.add(panel);
     }
     private void agregarVehiculo() {
@@ -103,4 +123,5 @@ public class TallerGUI extends JFrame {
             gui.setVisible(true);
         });
     }
+
 }

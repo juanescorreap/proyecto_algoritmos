@@ -10,7 +10,7 @@ public class Vehiculo {
     private int anoFabricacion;
     private String propietario;
     private String estado;
-    private ArrayList<Servicio> servicios; 
+    private ArrayList<Servicio> servicios;
 
     public Vehiculo(String tipoVehiculo, String modelo, String marca, String placa, int anoFabricacion, String propietario, String estado) {
         this.tipoVehiculo = tipoVehiculo;
@@ -34,7 +34,18 @@ public class Vehiculo {
     public String getEstado() {
         return this.estado;
     }
-
+    public String getTipoVehiculo() {
+        return tipoVehiculo;
+    }
+    public String getMarca() {
+        return marca;
+    }
+    public int getAnoFabricacion() {
+        return anoFabricacion;
+    }
+    public String getPropietario() {
+        return propietario;
+    }
     public void cambiarEstado(String nuevoEstado) {
         this.estado = nuevoEstado;
     }

@@ -1,5 +1,9 @@
 package taller_mecanico;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Taller {
@@ -61,4 +65,90 @@ public class Taller {
     public ArrayList<Empleado> getEmpleados() {
         return this.empleados;
     }
+    public void guardarVehiculosEnArchivo(String nombreArchivo) {
+    try (PrintWriter writer = new PrintWriter(nombreArchivo)) {
+        for (Vehiculo v : this.vehiculos) {
+            writer.printf("%s;%s;%s;%s;%d;%s;%s%n",
+                v.getTipoVehiculo(), v.getModelo(), v.getMarca(),
+                v.getPlaca(), v.getAnoFabricacion(),
+                v.getPropietario(), v.getEstado()
+            );
+        }
+        System.out.println("Vehículos guardados correctamente en " + nombreArchivo);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+public void cargarVehiculosDesdeArchivo(String nombreArchivo) {
+    this.vehiculos.clear(); // ← Limpia la lista antes de cargar
+    try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
+        String linea;
+        while ((linea = reader.readLine()) != null) {
+            String[] datos = linea.split(";");
+            if (datos.length == 7) {
+                Vehiculo v = new Vehiculo(
+                    datos[0], datos[1], datos[2], datos[3],
+                    Integer.parseInt(datos[4]),
+                    datos[5], datos[6]
+                );
+                this.vehiculos.add(v);
+            }
+        }
+        System.out.println("Vehículos cargados correctamente desde " + nombreArchivo);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+public void guardarEmpleadosEnArchivo(String nombreArchivo) {
+    try (PrintWriter writer = new PrintWriter(nombreArchivo)) {
+        for (Empleado e : this.empleados) {
+            writer.printf("%s;%s;%d%n", e.getNombre(), e.getPuesto(), e.getIdEmpleado());
+        }
+        System.out.println("Empleados guardados correctamente.");
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+public void cargarEmpleadosDesdeArchivo(String nombreArchivo) {
+    this.empleados.clear(); // ← Limpia la lista antes de cargar
+    try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
+        String linea;
+        while ((linea = reader.readLine()) != null) {
+            String[] datos = linea.split(";");
+            if (datos.length == 3) {
+                Empleado e = new Empleado(datos[0], datos[1], Integer.parseInt(datos[2]));
+                this.empleados.add(e);
+            }
+        }
+        System.out.println("Empleados cargados correctamente.");
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+public void guardarServiciosEnArchivo(String nombreArchivo) {
+    try (PrintWriter writer = new PrintWriter(nombreArchivo)) {
+        for (Servicio s : this.servicios) {
+            writer.printf("%s;%.2f%n", s.getNombreServicio(), s.getCosto());
+        }
+        System.out.println("Servicios guardados correctamente.");
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+public void cargarServiciosDesdeArchivo(String nombreArchivo) {
+    this.servicios.clear(); // ← Limpia la lista antes de cargar
+    try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
+        String linea;
+        while ((linea = reader.readLine()) != null) {
+            String[] datos = linea.split(";");
+            if (datos.length == 2) {
+                Servicio s = new Servicio(datos[0], Double.parseDouble(datos[1]));
+                this.servicios.add(s);
+            }
+        }
+        System.out.println("Servicios cargados correctamente.");
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
 }
