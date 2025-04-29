@@ -80,7 +80,7 @@ public class Taller {
     }
 }
 public void cargarVehiculosDesdeArchivo(String nombreArchivo) {
-    this.vehiculos.clear(); // ← Limpia la lista antes de cargar
+    this.vehiculos.clear();
     try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
         String linea;
         while ((linea = reader.readLine()) != null) {
@@ -110,7 +110,7 @@ public void guardarEmpleadosEnArchivo(String nombreArchivo) {
     }
 }
 public void cargarEmpleadosDesdeArchivo(String nombreArchivo) {
-    this.empleados.clear(); // ← Limpia la lista antes de cargar
+    this.empleados.clear();
     try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
         String linea;
         while ((linea = reader.readLine()) != null) {
@@ -136,7 +136,7 @@ public void guardarServiciosEnArchivo(String nombreArchivo) {
     }
 }
 public void cargarServiciosDesdeArchivo(String nombreArchivo) {
-    this.servicios.clear(); // ← Limpia la lista antes de cargar
+    this.servicios.clear();
     try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
         String linea;
         while ((linea = reader.readLine()) != null) {
