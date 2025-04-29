@@ -54,4 +54,11 @@ public class Taller {
             System.out.println("El vehículo no está registrado en el taller.");
         }
     }
+    public ArrayList<Vehiculo> getVehiculos() {
+        return this.vehiculos;
+    }
+
+    public ArrayList<Empleado> getEmpleados() {
+        return this.empleados;
+    }
 }
