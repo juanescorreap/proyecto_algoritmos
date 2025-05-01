@@ -26,25 +26,37 @@ public class TallerGUI extends JFrame {
 
         JButton btnAgregarVehiculo = new JButton("Agregar Vehiculo");
         JButton btnAgregarEmpleado = new JButton("Agregar Empleado");
+        JButton btnAgregarServicio = new JButton("Agregar Servicio");
+
         JButton btnMostrarVehiculos = new JButton("Mostrar Vehiculos");
         JButton btnMostrarEmpleados = new JButton("Mostrar Empleados");
+        JButton btnMostrarServicios = new JButton("Mostrar Servicios");
+        JButton btnAsignarServicioAvehiculo = new JButton("Asignar Servicio a Vehiculo");
+
         JButton btnGuardarVehiculos = new JButton("Guardar Vehículos");
-        JButton btnCargarVehiculos = new JButton("Cargar Vehículos");
         JButton btnGuardarEmpleados = new JButton("Guardar Empleados");
-        JButton btnCargarEmpleados = new JButton("Cargar Empleados");
         JButton btnGuardarServicios = new JButton("Guardar Servicios");
+
+        JButton btnCargarVehiculos = new JButton("Cargar Vehículos");
+        JButton btnCargarEmpleados = new JButton("Cargar Empleados");
         JButton btnCargarServicios = new JButton("Cargar Servicios");
 
 
         panel.add(btnAgregarVehiculo);
         panel.add(btnAgregarEmpleado);
+        panel.add(btnAgregarServicio);
+
         panel.add(btnMostrarVehiculos);
         panel.add(btnMostrarEmpleados);
+        panel.add(btnMostrarServicios);
+        panel.add(btnAsignarServicioAvehiculo);
+
         panel.add(btnGuardarVehiculos);
-        panel.add(btnCargarVehiculos);
         panel.add(btnGuardarEmpleados);
-        panel.add(btnCargarEmpleados);
         panel.add(btnGuardarServicios);
+
+        panel.add(btnCargarVehiculos);
+        panel.add(btnCargarEmpleados);
         panel.add(btnCargarServicios);
 
         btnAgregarVehiculo.addActionListener(new ActionListener() {
@@ -59,6 +71,13 @@ public class TallerGUI extends JFrame {
             }
         });
 
+        btnAgregarServicio.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                agregarServicio();
+            }
+        });
+
+
         btnMostrarVehiculos.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 mostrarVehiculos();
@@ -70,11 +89,23 @@ public class TallerGUI extends JFrame {
                 mostrarEmpleados();
             }
         });
+
+        btnMostrarServicios.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                mostrarServicios();
+            }
+        });
+        btnAsignarServicioAvehiculo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                asignarServicioAvehiculo();
+            }
+        });
+
         btnGuardarVehiculos.addActionListener(e -> taller.guardarVehiculosEnArchivo("vehiculos.txt"));
-        btnCargarVehiculos.addActionListener(e -> taller.cargarVehiculosDesdeArchivo("vehiculos.txt"));
         btnGuardarEmpleados.addActionListener(e -> taller.guardarEmpleadosEnArchivo("empleados.txt"));
-        btnCargarEmpleados.addActionListener(e -> taller.cargarEmpleadosDesdeArchivo("empleados.txt"));
         btnGuardarServicios.addActionListener(e -> taller.guardarServiciosEnArchivo("servicios.txt"));
+        btnCargarVehiculos.addActionListener(e -> taller.cargarVehiculosDesdeArchivo("vehiculos.txt"));
+        btnCargarEmpleados.addActionListener(e -> taller.cargarEmpleadosDesdeArchivo("empleados.txt"));
         btnCargarServicios.addActionListener(e -> taller.cargarServiciosDesdeArchivo("servicios.txt"));
 
         this.add(panel);
@@ -103,6 +134,16 @@ public class TallerGUI extends JFrame {
 
         JOptionPane.showMessageDialog(this, "Empleado agregado exitosamente.");
     }
+    private void agregarServicio() {
+        String nombreServicio = JOptionPane.showInputDialog(this, "Nombre del servicio");
+        double costo = Double.parseDouble(JOptionPane.showInputDialog(this, "Costo del servicio"));
+
+        Servicio servicio = new Servicio(nombreServicio, costo);
+        taller.agregarServicio(servicio);
+
+        JOptionPane.showMessageDialog(this,"Servicio agregado exitosamente");
+    }
+
     private void mostrarVehiculos() {
         StringBuilder sb = new StringBuilder();
         for (Vehiculo v : taller.getVehiculos()) {
@@ -117,6 +158,60 @@ public class TallerGUI extends JFrame {
         }
         JOptionPane.showMessageDialog(this, sb.length() > 0 ? sb.toString() : "No hay empleados registrados.");
     }
+    private void mostrarServicios(){
+        StringBuilder sb = new StringBuilder();
+        for (Servicio s : taller.getServicios()){
+            sb.append(s.getNombreServicio()).append(" - ").append(s.getCosto()).append("\n");
+        }
+        JOptionPane.showMessageDialog(this, sb.length()> 0 ? sb.toString():"No hay servicios registrados");
+    }
+
+    private void asignarServicioAvehiculo(){
+        if (taller.getVehiculos().isEmpty()){
+            JOptionPane.showMessageDialog(this,"No hay vehiculos registrados");
+            return;
+        }
+        String[] placas = taller.getVehiculos().stream()
+                .map(Vehiculo::getPlaca)
+                .toArray(String[]::new);
+        String placaSeleccionada = (String) JOptionPane.showInputDialog(
+            this,
+            "Selecciona una placa:",
+            "Asignar servicio",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            placas,
+            placas[0]
+        );
+        if(placaSeleccionada == null) return;
+
+        Vehiculo vehiculo = taller.getVehiculos().stream()
+                .filter(v -> v.getPlaca().equals(placaSeleccionada))
+                .findFirst()
+                .orElse(null);
+
+        if (vehiculo == null) {
+            JOptionPane.showMessageDialog(this, "Vehiculo no encontrado");
+            return;
+        }
+        String nombreServicio = JOptionPane.showInputDialog(this, "Nombre del servicio:");
+        if (nombreServicio == null || nombreServicio.trim().isEmpty()) return;
+
+        double costo;
+
+        try {
+            costo =Double.parseDouble(JOptionPane.showInputDialog(this, "Costo del servicio:"));
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Costo Inválido");
+            return;
+        }
+        Servicio servicio = new Servicio(nombreServicio, costo);
+        taller.asignarServicioAvehiculo(vehiculo, servicio);
+
+        JOptionPane.showMessageDialog(this, "Servicio asignado correctamente");
+    }
+
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             TallerGUI gui = new TallerGUI();

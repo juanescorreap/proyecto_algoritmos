@@ -35,21 +35,18 @@ public class Taller {
             v.mostrarInformacion();
         }
     }
-
     public void mostrarEmpleados() {
         System.out.println("Empleados del taller:");
         for (Empleado e : empleados) {
             e.mostrarEmpleado();
         }
     }
-
     public void mostrarServicios() {
         System.out.println("Servicios en curso en el taller:");
         for (Servicio s : servicios) {
             s.mostrarServicio();
         }
     }
-
     public void asignarServicioAvehiculo(Vehiculo vehiculo, Servicio servicio) {
         if (vehiculos.contains(vehiculo)) {
             vehiculo.agregarServicio(servicio);
@@ -64,6 +61,9 @@ public class Taller {
 
     public ArrayList<Empleado> getEmpleados() {
         return this.empleados;
+    }
+    public ArrayList<Servicio> getServicios() {
+        return this.servicios;
     }
     public void guardarVehiculosEnArchivo(String nombreArchivo) {
     try (PrintWriter writer = new PrintWriter(nombreArchivo)) {

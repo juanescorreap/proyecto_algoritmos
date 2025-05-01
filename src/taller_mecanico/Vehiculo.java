@@ -23,22 +23,17 @@ public class Vehiculo {
         this.servicios = new ArrayList<>();
     }
 
-    public String getPlaca() {
-        return this.placa;
-    }
-
-    public String getModelo() {
-        return this.modelo;
-    }
-
-    public String getEstado() {
-        return this.estado;
-    }
     public String getTipoVehiculo() {
         return tipoVehiculo;
     }
+    public String getModelo() {
+        return this.modelo;
+    }
     public String getMarca() {
         return marca;
+    }
+    public String getPlaca() {
+        return this.placa;
     }
     public int getAnoFabricacion() {
         return anoFabricacion;
@@ -46,19 +41,19 @@ public class Vehiculo {
     public String getPropietario() {
         return propietario;
     }
-    public void cambiarEstado(String nuevoEstado) {
-        this.estado = nuevoEstado;
+    public String getEstado() {
+        return this.estado;
     }
-
     public void agregarServicio(Servicio servicio) {
         this.servicios.add(servicio);
     }
-
+    public void cambiarEstado(String nuevoEstado) {
+        this.estado = nuevoEstado;
+    }
     public void mostrarInformacion() {
         System.out.printf("Tipo de vehículo: %s%nModelo: %s%nMarca: %s%nPlaca: %s%nAño: %d%nPropietario: %s%nEstado: %s%n",
                 this.tipoVehiculo, this.modelo, this.marca, this.placa, this.anoFabricacion, this.propietario, this.estado);
     }
-
     public void mostrarServicios() {
         System.out.println("Servicios asignados:");
         for (Servicio servicio : servicios) {
