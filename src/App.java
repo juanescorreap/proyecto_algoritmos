@@ -1,4 +1,10 @@
-package taller_mecanico;
+
+
+import taller_mecanico.Empleado;
+import taller_mecanico.Servicio;
+import taller_mecanico.Taller;
+import taller_mecanico.Vehiculo;
+import taller_mecanico.TallerGUI;
 
 public class App {
     public static void main(String[] args) {
@@ -16,5 +22,8 @@ public class App {
         vehiculo1.mostrarServicios();
         empleado1.mostrarEmpleado();
         servicio1.mostrarServicio();
+
+        TallerGUI tallerGUI = new TallerGUI();
+        tallerGUI.setVisible(true);
     }
 }
