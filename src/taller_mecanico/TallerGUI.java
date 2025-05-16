@@ -8,98 +8,151 @@ import java.awt.event.ActionListener;
 
 public class TallerGUI extends JFrame {
     private Taller taller;
+    private JPanel cards;
+    private final static String MENU = "Menu";
+    private final static String VEHICULOS = "Vehiculos";
+    private final static String EMPLEADOS = "Empleados";
+    private final static String SERVICIOS = "Servicios";
 
     public TallerGUI() {
         taller = new Taller();
         configurarVentana();
         inicializarComponentes();
     }
+
     private void configurarVentana() {
         this.setTitle("Taller Mecánico");
-        this.setSize(500, 400);
+        this.setSize(500, 500);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
     }
-    
+
     private void inicializarComponentes() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
+        cards = new JPanel(new CardLayout());
+
+        JPanel menuPanel = new JPanel(new GridLayout(4, 1, 10, 10));
+        JButton btnVehiculo = new JButton("Vehículo");
+        JButton btnEmpleado = new JButton("Empleado");
+        JButton btnServicio = new JButton("Servicio");
+        JButton btnSalir = new JButton("Salir");
+
+        menuPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        menuPanel.add(btnVehiculo);
+        menuPanel.add(btnEmpleado);
+        menuPanel.add(btnServicio);
+        menuPanel.add(btnSalir);
+
+        // Crear paneles específicos
+        JPanel vehiculoPanel = crearPanelVehiculo();
+        JPanel empleadoPanel = crearPanelEmpleado();
+        JPanel servicioPanel = crearPanelServicio();
+
+        cards.add(menuPanel, MENU);
+        cards.add(vehiculoPanel, VEHICULOS);
+        cards.add(empleadoPanel, EMPLEADOS);
+        cards.add(servicioPanel, SERVICIOS);
+
+        btnVehiculo.addActionListener(e -> mostrarPanel(VEHICULOS));
+        btnEmpleado.addActionListener(e -> mostrarPanel(EMPLEADOS));
+        btnServicio.addActionListener(e -> mostrarPanel(SERVICIOS));
+        btnSalir.addActionListener(e -> System.exit(0));
+
+        this.add(cards);
+    }
+
+    private JPanel crearPanelVehiculo() {
+        JPanel panel = crearPanelBase();
+
+        JButton btnAgregar = new JButton("Agregar Vehículo");
+        JButton btnMostrar = new JButton("Mostrar Vehículos");
+        JButton btnGuardar = new JButton("Guardar Vehículos");
+        JButton btnCargar = new JButton("Cargar Vehículos");
+        JButton btnVolver = new JButton("Volver al Menú");
+
+        agregarBoton(panel, btnAgregar);
+        agregarBoton(panel, btnMostrar);
+        agregarBoton(panel, btnGuardar);
+        agregarBoton(panel, btnCargar);
+        agregarBoton(panel, btnVolver);
+
+        btnAgregar.addActionListener(e -> agregarVehiculo());
+        btnMostrar.addActionListener(e -> mostrarVehiculos());
+        btnGuardar.addActionListener(e -> taller.guardarVehiculosEnArchivo("vehiculos.txt"));
+        btnCargar.addActionListener(e -> taller.cargarVehiculosDesdeArchivo("vehiculos.txt"));
+        btnVolver.addActionListener(e -> mostrarPanel(MENU));
+
+        return panel;
+    }
+
+    private JPanel crearPanelEmpleado() {
+        JPanel panel = crearPanelBase();
+
+        JButton btnAgregar = new JButton("Agregar Empleado");
+        JButton btnMostrar = new JButton("Mostrar Empleados");
+        JButton btnGuardar = new JButton("Guardar Empleados");
+        JButton btnCargar = new JButton("Cargar Empleados");
+        JButton btnVolver = new JButton("Volver al Menú");
+
+        agregarBoton(panel, btnAgregar);
+        agregarBoton(panel, btnMostrar);
+        agregarBoton(panel, btnGuardar);
+        agregarBoton(panel, btnCargar);
+        agregarBoton(panel, btnVolver);
+
+        btnAgregar.addActionListener(e -> agregarEmpleado());
+        btnMostrar.addActionListener(e -> mostrarEmpleados());
+        btnGuardar.addActionListener(e -> taller.guardarEmpleadosEnArchivo("empleados.txt"));
+        btnCargar.addActionListener(e -> taller.cargarEmpleadosDesdeArchivo("empleados.txt"));
+        btnVolver.addActionListener(e -> mostrarPanel(MENU));
+
+        return panel;
+    }
+
+    private JPanel crearPanelServicio() {
+        JPanel panel = crearPanelBase();
+
+        JButton btnAgregar = new JButton("Agregar Servicio");
+        JButton btnMostrar = new JButton("Mostrar Servicios");
+        JButton btnGuardar = new JButton("Guardar Servicios");
+        JButton btnCargar = new JButton("Cargar Servicios");
+        JButton btnAsignar = new JButton("Asignar Servicio a Vehículo");
+        JButton btnVolver = new JButton("Volver al Menú");
+
+        agregarBoton(panel, btnAgregar);
+        agregarBoton(panel, btnMostrar);
+        agregarBoton(panel, btnGuardar);
+        agregarBoton(panel, btnCargar);
+        agregarBoton(panel, btnAsignar);
+        agregarBoton(panel, btnVolver);
+
+        btnAgregar.addActionListener(e -> agregarServicio());
+        btnMostrar.addActionListener(e -> mostrarServicios());
+        btnGuardar.addActionListener(e -> taller.guardarServiciosEnArchivo("servicios.txt"));
+        btnCargar.addActionListener(e -> taller.cargarServiciosDesdeArchivo("servicios.txt"));
+        btnAsignar.addActionListener(e -> asignarServicioAvehiculo());
+        btnVolver.addActionListener(e -> mostrarPanel(MENU));
+
+        return panel;
+    }
+
+    private JPanel crearPanelBase() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        return panel;
+    }
+
+    private void agregarBoton(JPanel panel, JButton boton) {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0; // columna 0
+        gbc.gridx = 0;
+        gbc.gridy = panel.getComponentCount(); // posición vertical automática
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 10, 5, 10); // margen entre botones
+        gbc.insets = new Insets(5, 0, 5, 0);
+        panel.add(boton, gbc);
+    }
 
-        int fila = 0;
-
-        JButton btnAgregarVehiculo = new JButton("Agregar Vehiculo");
-        gbc.gridy = fila++;
-        panel.add(btnAgregarVehiculo, gbc);
-
-        JButton btnAgregarEmpleado = new JButton("Agregar Empleado");
-        gbc.gridy = fila++;
-        panel.add(btnAgregarEmpleado, gbc);
-
-        JButton btnAgregarServicio = new JButton("Agregar Servicio");
-        gbc.gridy = fila++;
-        panel.add(btnAgregarServicio, gbc);
-
-        JButton btnMostrarVehiculos = new JButton("Mostrar Vehiculos");
-        gbc.gridy = fila++;
-        panel.add(btnMostrarVehiculos, gbc);
-
-        JButton btnMostrarEmpleados = new JButton("Mostrar Empleados");
-        gbc.gridy = fila++;
-        panel.add(btnMostrarEmpleados, gbc);
-
-        JButton btnMostrarServicios = new JButton("Mostrar Servicios");
-        gbc.gridy = fila++;
-        panel.add(btnMostrarServicios, gbc);
-
-        JButton btnAsignarServicioAvehiculo = new JButton("Asignar Servicio a Vehiculo");
-        gbc.gridy = fila++;
-        panel.add(btnAsignarServicioAvehiculo, gbc);
-
-        JButton btnGuardarVehiculos = new JButton("Guardar Vehículos");
-        gbc.gridy = fila++;
-        panel.add(btnGuardarVehiculos, gbc);
-
-        JButton btnGuardarEmpleados = new JButton("Guardar Empleados");
-        gbc.gridy = fila++;
-        panel.add(btnGuardarEmpleados, gbc);
-
-        JButton btnGuardarServicios = new JButton("Guardar Servicios");
-        gbc.gridy = fila++;
-        panel.add(btnGuardarServicios, gbc);
-
-        JButton btnCargarVehiculos = new JButton("Cargar Vehículos");
-        gbc.gridy = fila++;
-        panel.add(btnCargarVehiculos, gbc);
-
-        JButton btnCargarEmpleados = new JButton("Cargar Empleados");
-        gbc.gridy = fila++;
-        panel.add(btnCargarEmpleados, gbc);
-
-        JButton btnCargarServicios = new JButton("Cargar Servicios");
-        gbc.gridy = fila++;
-        panel.add(btnCargarServicios, gbc);
-
-        // Acción de botones (lo puedes dejar como está, o reutilizar)
-        btnAgregarVehiculo.addActionListener(e -> agregarVehiculo());
-        btnAgregarEmpleado.addActionListener(e -> agregarEmpleado());
-        btnAgregarServicio.addActionListener(e -> agregarServicio());
-        btnMostrarVehiculos.addActionListener(e -> mostrarVehiculos());
-        btnMostrarEmpleados.addActionListener(e -> mostrarEmpleados());
-        btnMostrarServicios.addActionListener(e -> mostrarServicios());
-        btnAsignarServicioAvehiculo.addActionListener(e -> asignarServicioAvehiculo());
-
-        btnGuardarVehiculos.addActionListener(e -> taller.guardarVehiculosEnArchivo("vehiculos.txt"));
-        btnGuardarEmpleados.addActionListener(e -> taller.guardarEmpleadosEnArchivo("empleados.txt"));
-        btnGuardarServicios.addActionListener(e -> taller.guardarServiciosEnArchivo("servicios.txt"));
-        btnCargarVehiculos.addActionListener(e -> taller.cargarVehiculosDesdeArchivo("vehiculos.txt"));
-        btnCargarEmpleados.addActionListener(e -> taller.cargarEmpleadosDesdeArchivo("empleados.txt"));
-        btnCargarServicios.addActionListener(e -> taller.cargarServiciosDesdeArchivo("servicios.txt"));
-
-        this.add(panel);
+    private void mostrarPanel(String nombre) {
+        CardLayout cl = (CardLayout) cards.getLayout();
+        cl.show(cards, nombre);
     }
 
     private void agregarVehiculo() {
@@ -116,6 +169,7 @@ public class TallerGUI extends JFrame {
 
         JOptionPane.showMessageDialog(this, "Vehículo agregado exitosamente.");
     }
+    
     private void agregarEmpleado() {
         String nombre = JOptionPane.showInputDialog(this, "Nombre del empleado:");
         String puesto = JOptionPane.showInputDialog(this, "Puesto:");
@@ -126,6 +180,7 @@ public class TallerGUI extends JFrame {
 
         JOptionPane.showMessageDialog(this, "Empleado agregado exitosamente.");
     }
+    
     private void agregarServicio() {
         String nombreServicio = JOptionPane.showInputDialog(this, "Nombre del servicio");
         double costo = Double.parseDouble(JOptionPane.showInputDialog(this, "Costo del servicio"));
@@ -135,7 +190,7 @@ public class TallerGUI extends JFrame {
 
         JOptionPane.showMessageDialog(this,"Servicio agregado exitosamente");
     }
-
+    
     private void mostrarVehiculos() {
         StringBuilder sb = new StringBuilder();
         for (Vehiculo v : taller.getVehiculos()) {
@@ -143,6 +198,7 @@ public class TallerGUI extends JFrame {
         }
         JOptionPane.showMessageDialog(this, sb.length() > 0 ? sb.toString() : "No hay vehículos registrados.");
     }
+    
     private void mostrarEmpleados() {
         StringBuilder sb = new StringBuilder();
         for (Empleado e : taller.getEmpleados()) {
@@ -150,6 +206,7 @@ public class TallerGUI extends JFrame {
         }
         JOptionPane.showMessageDialog(this, sb.length() > 0 ? sb.toString() : "No hay empleados registrados.");
     }
+    
     private void mostrarServicios(){
         StringBuilder sb = new StringBuilder();
         for (Servicio s : taller.getServicios()){
@@ -202,13 +259,4 @@ public class TallerGUI extends JFrame {
 
         JOptionPane.showMessageDialog(this, "Servicio asignado correctamente");
     }
-
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            TallerGUI gui = new TallerGUI();
-            gui.setVisible(true);
-        });
-    }
-
 }
